@@ -1,0 +1,224 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================ theme tokens
+   Single place to change the look. Tailwind colors in tailwind.config.ts
+   mirror these values. */
+:root {
+  --bg: #0b0d14;
+  --surface: #141824;
+  --border: #2a3147;
+  --inactive: #1e2538;
+  --accent: #c6ff3d;
+  --accent-fg: #0b0d14;
+  --text: #ffffff;
+  --text-muted: #9aa3b8;
+
+  --radius-control: 12px;
+  --radius-card: 20px;
+  --radius-panel: 24px;
+  --radius-hero: 28px;
+
+  color-scheme: dark;
+}
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+}
+
+html {
+  /* Prevent iOS Safari from enlarging text when the device rotates. */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: var(--font-inter), ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Arial,
+    sans-serif;
+  /* Backstop: no single element may pan the entire document sideways.
+     `clip` (not `hidden`) so `position: sticky` descendants keep working. */
+  overflow-x: clip;
+  /* Long unbreakable tokens (club names, codes, URLs) must not widen the layout. */
+  overflow-wrap: anywhere;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-space-grotesk), ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: -0.01em;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+@layer base {
+  /* Comfortable touch targets: form controls default to ~44px tall.
+     Icon-only buttons reset this with the `.btn-sm` helper below. */
+  input:not([type='checkbox']):not([type='radio']),
+  select,
+  textarea,
+  button {
+    min-height: 44px;
+  }
+
+  /* Compact controls (zoom buttons, inline chips) opt out explicitly. */
+  .btn-sm,
+  .btn-sm * {
+    min-height: 0;
+  }
+}
+
+/* Visible keyboard focus across the dark UI (mouse users are unaffected). */
+:where(a, button, input, select, textarea):focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* Honor the OS "reduce motion" preference. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ====================================================== reusable primitives */
+@layer components {
+  /* Surfaces ------------------------------------------------------------- */
+  .surface {
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-card);
+  }
+
+  .panel {
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-panel);
+  }
+
+  /* Buttons -------------------------------------------------------------- */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 44px;
+    padding: 0 1.1rem;
+    border-radius: var(--radius-control);
+    font-weight: 600;
+    font-size: 0.9rem;
+    line-height: 1;
+    border: 1px solid transparent;
+    transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+    cursor: pointer;
+  }
+
+  .btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .btn-primary {
+    background-color: var(--accent);
+    color: var(--accent-fg);
+  }
+  .btn-primary:hover:not(:disabled) {
+    background-color: #d4ff6e;
+  }
+
+  .btn-outline {
+    background-color: transparent;
+    border-color: var(--border);
+    color: var(--text);
+  }
+  .btn-outline:hover:not(:disabled) {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .btn-ghost {
+    background-color: var(--inactive);
+    color: var(--text);
+  }
+  .btn-ghost:hover:not(:disabled) {
+    background-color: #273049;
+  }
+
+  /* Fields --------------------------------------------------------------- */
+  .field {
+    width: 100%;
+    min-height: 44px;
+    padding: 0 0.85rem;
+    border-radius: var(--radius-control);
+    background-color: #0f1320;
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-size: 0.9rem;
+  }
+  .field::placeholder {
+    color: var(--text-muted);
+  }
+  .field:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+
+  /* Small text helpers */
+  .text-muted {
+    color: var(--text-muted);
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.2rem 0.6rem;
+    border-radius: 9999px;
+    background-color: var(--inactive);
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+}
+
+/* Every tap target should be at least ~44px tall on touch. */
+.tap-target {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* Horizontally scrollable tab/segment strips without a visible scrollbar. */
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Utility: respect iPhone notch / home indicator when pinned to the bottom. */
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+@supports (padding: max(0px)) {
+  .safe-bottom {
+    padding-bottom: max(env(safe-area-inset-bottom), 0.5rem);
+  }
+}

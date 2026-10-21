@@ -1,0 +1,44 @@
+# CyberBook — local development stack
+# Usage: docker compose up -d
+# API:   http://localhost:4000/api/v1
+# Web:   http://localhost:3000
+# DB:    localhost:5433 (mapped so it never clashes with a local Postgres on 5432)
+name: cyberbook
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: cyberbook-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: cyberbook
+      POSTGRES_PASSWORD: cyberbook
+      POSTGRES_DB: cyberbook
+      TZ: Asia/Tashkent
+      PGTZ: Asia/Tashkent
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cyberbook -d cyberbook"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    # The database port is published on localhost only for local development.
+    # In production, never expose the database port publicly.
+
+  redis:
+    image: redis:7-alpine
+    container_name: cyberbook-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  pgdata:

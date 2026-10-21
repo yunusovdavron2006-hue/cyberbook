@@ -1,0 +1,13 @@
+{
+  "/_not-found/page": "app/_not-found/page.js",
+  "/icon.svg/route": "app/icon.svg/route.js",
+  "/bookings/page": "app/bookings/page.js",
+  "/admin/page": "app/admin/page.js",
+  "/login/page": "app/login/page.js",
+  "/favorites/page": "app/favorites/page.js",
+  "/dashboard/page": "app/dashboard/page.js",
+  "/dashboard/clubs/[id]/page": "app/dashboard/clubs/[id]/page.js",
+  "/register/page": "app/register/page.js",
+  "/clubs/[slug]/page": "app/clubs/[slug]/page.js",
+  "/page": "app/page.js"
+}

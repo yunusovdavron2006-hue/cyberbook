@@ -1,0 +1,29 @@
+{
+  "name": "cyberbook",
+  "private": true,
+  "version": "0.1.0",
+  "description": "CyberBook — computer gaming club discovery and reservation platform for Uzbekistan",
+  "workspaces": [
+    "apps/*",
+    "services/*",
+    "packages/*"
+  ],
+  "engines": {
+    "node": ">=20.11.0"
+  },
+  "scripts": {
+    "dev:api": "npm run start:dev --workspace @cyberbook/api",
+    "dev:web": "npm run dev --workspace @cyberbook/web",
+    "build:api": "npm run build --workspace @cyberbook/api",
+    "build:web": "npm run build --workspace @cyberbook/web",
+    "test:api": "npm run test --workspace @cyberbook/api",
+    "lint": "npm run lint --workspaces --if-present",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "db:migrate": "npm run db:migrate --workspace @cyberbook/api",
+    "db:seed": "npm run db:seed --workspace @cyberbook/api",
+    "db:reset": "npm run db:reset --workspace @cyberbook/api"
+  },
+  "devDependencies": {
+    "typescript": "5.7.3"
+  }
+}

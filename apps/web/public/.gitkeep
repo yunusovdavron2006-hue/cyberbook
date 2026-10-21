@@ -1,0 +1,1 @@
+# Keeps the public/ directory in source control; Next.js copies it into the standalone build.
