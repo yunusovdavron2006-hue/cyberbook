@@ -1,9 +1,0 @@
-{
-  "/_not-found/page": "app/_not-found/page.js",
-  "/icon.svg/route": "app/icon.svg/route.js",
-  "/page": "app/page.js",
-  "/register/page": "app/register/page.js",
-  "/login/page": "app/login/page.js",
-  "/clubs/[slug]/page": "app/clubs/[slug]/page.js",
-  "/dashboard/clubs/[id]/page": "app/dashboard/clubs/[id]/page.js"
-}

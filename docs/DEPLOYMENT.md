@@ -46,6 +46,58 @@ points the browser directly at an absolute API URL instead.
 Migrations are applied with `prisma migrate deploy` (non-interactive, safe for
 CI/CD). Never use `migrate dev` against production.
 
+## Vercel (web app)
+
+The repository is an **npm workspaces monorepo**. Only `apps/web` is deployed to
+Vercel; the NestJS API in `services/api` is deployed separately (Render, Railway,
+Fly.io, a VPS — anything that can run a Node service with a PostgreSQL database).
+
+### Project settings (Vercel dashboard → Settings → General)
+
+| Setting | Value | Why |
+| ------- | ----- | --- |
+| Root Directory | `apps/web` | The Next.js app lives here. |
+| Framework Preset | Next.js | Auto-detected; do not override. |
+| Build Command | `npm run build` (default) | Runs `next build` inside `apps/web`. Equivalent to the repo-root `npm run build:web`. |
+| Install Command | `npm ci` | Vercel runs it at the **repository root** (monorepo), using the root `package-lock.json`. |
+| Output Directory | `apps/web/.next` | Default; do not change. |
+| Node.js Version | 22.x | Matches `engines.node >= 20.11.0`. |
+
+The repo-root `vercel.json` makes the same build reproducible if the project is
+configured with the repository root as the Root Directory instead.
+
+### Environment variables (Vercel → Settings → Environment Variables)
+
+| Variable | Scope | Value | Required |
+| -------- | ----- | ----- | -------- |
+| `API_INTERNAL_URL` | Production + Preview | Public origin of the deployed API, e.g. `https://api.cyberbook.uz` | **yes** |
+| `NEXT_PUBLIC_API_BASE_URL` | — | Leave unset | no |
+| `NODE_VERSION` | — | `22` (optional; also set in `vercel.json`) | no |
+
+`API_INTERNAL_URL` must be the **server-side** API origin (no `/api/v1` suffix —
+the Next proxy appends it). It is read only by the Next server and is never
+exposed to the browser. Leaving it unset falls back to `http://localhost:4000`,
+which does not exist on Vercel: the site will build, but every page that talks
+to the API (`/`, `/clubs`, `/clubs/[slug]`) will render its empty/error state.
+
+The browser always calls `/api/v1/*` on the web app's own origin; Next rewrites
+those requests to `API_INTERNAL_URL`. No API credentials, database URLs or
+secrets are ever shipped to the client.
+
+### Redeploying
+
+```bash
+git checkout main
+git pull origin main
+npm ci
+npm run build --workspace @cyberbook/web   # must succeed locally too
+git push origin main                      # triggers a Vercel deployment
+```
+
+If the Vercel project is configured with the repository root as the Root
+Directory instead of `apps/web`, keep the root `vercel.json` in place — it
+supplies `buildCommand`, `installCommand` and `outputDirectory`.
+
 ## Docker Compose
 
 ```bash

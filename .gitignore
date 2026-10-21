@@ -7,6 +7,10 @@ node_modules/
 apps/web/.next/
 apps/web/out/
 apps/web/next-env.d.ts
+# Stale build snapshots (e.g. .next.bak-*, .next.prod-*) must never be committed:
+# they embed the framework version they were built with (diagnostics/framework.json)
+# and ship a full copy of node_modules to the deployment target.
+apps/web/.next.*/
 
 # Builds
 dist/
